@@ -1,0 +1,14 @@
+name: pytorch
+channels:
+ - pytorch
+dependencies:
+  - ipython
+  - cython
+  - pip
+  - python=3.5.6
+  - wheel
+  - numpy
+  - pytorch-cpu
+  - torchvision-cpu
+  - pip:
+    - scikit-learn

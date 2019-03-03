@@ -1,0 +1,11 @@
+name: tensorflow
+dependencies:
+  - ipython
+  - cython
+  - pip
+  - python=3.5.6
+  - wheel
+  - numpy
+  - pip:
+    - tensorflow
+    - scikit-learn
