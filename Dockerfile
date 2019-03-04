@@ -1,39 +1,51 @@
 FROM ubuntu:16.04
 
-# System Update
-RUN apt-get update
-RUN apt-get -y install vim tree curl wget git sudo tar bzip2
-RUN apt-get install -qqy x11-apps
+# System Update and pre-requisites
+RUN apt-get update && \
+    apt-get -y install \
+        bzip2 \
+        cmake \
+        curl \
+        git \
+        tar \
+        tree \
+        wget \
+        vim && \
+    apt-get install -qqy x11-apps && \
+    apt-get install -y openmpi-bin
 
 # Non-root user account setup
 # root user can still be accessed using `su` with the password `aima`
-RUN echo "root:aima" | chpasswd
-RUN groupadd -g 999 grp && \
-    useradd -r -u 999 -g grp usr
-RUN mkdir /home/usr
-RUN cp /root/.bashrc /home/usr
-RUN echo "source /home/usr/.bashprofile" >> /home/usr/.bashrc
+RUN echo "root:aima" | chpasswd && \
+    groupadd -g 999 grp && \
+    useradd -r -u 999 -g grp usr && \
+    mkdir /home/usr && \
+    cp /root/.bashrc /home/usr && \
+    echo "source /home/usr/.bashprofile" >> /home/usr/.bashrc && \
+    chown -R usr /home/usr
 
 # Setup default work directory for the user
 WORKDIR /home/usr
-RUN chown -R usr /home/usr
 
 # Install miniconda for python virtual env management
 USER usr:grp
-RUN wget "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" -O /tmp/miniconda.sh
-RUN bash /tmp/miniconda.sh -b
-RUN rm -f /tmp/miniconda.sh
-RUN echo "PATH=$PATH:/home/usr/miniconda3/bin" >> /home/usr/.bashrc
+RUN wget "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" \
+        -O /tmp/miniconda.sh && \
+    bash /tmp/miniconda.sh -b && \
+    /home/usr/miniconda3/bin/conda update -n base -c defaults conda && \
+    rm -f /tmp/miniconda.sh
 COPY . /home/usr/
 
 # Setup python machine learning packages
 USER root
-RUN for env in /home/usr/envs/*; do /home/usr/miniconda3/bin/conda env create -f $env; done
-RUN rm -rf /home/usr/envs
+RUN for env in /home/usr/envs/*; do /home/usr/miniconda3/bin/conda env create -f $env; done && \
+    rm -rf /home/usr/envs
 
-# Download aima repositories
+# Download and setup aima-python
 USER usr:grp
 RUN git clone https://github.com/aimacode/aima-python.git /home/usr/aima-python
+# RUN /home/usr/miniconda3/bin/conda install python=3.5.6 Need to wait for conda update to enforce this
+RUN /home/usr/miniconda3/bin/pip install -r /home/usr/aima-python/requirements.txt
 
 # Terminal settings for the container
 ENV TERM=xterm-256color

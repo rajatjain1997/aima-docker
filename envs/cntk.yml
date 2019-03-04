@@ -1,4 +1,4 @@
-name: tensorflow
+name: cntk
 dependencies:
   - ipython
   - cython
@@ -7,6 +7,6 @@ dependencies:
   - wheel
   - numpy
   - pip:
-    - tensorflow
+    - cntk
     - keras
     - scikit-learn
