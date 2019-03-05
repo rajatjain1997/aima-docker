@@ -1,6 +1,7 @@
 name: cntk
 dependencies:
   - ipython
+  - ipykernel
   - cython
   - pip
   - python=3.5.6

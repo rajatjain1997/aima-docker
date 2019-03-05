@@ -1,5 +1,6 @@
 create_default_packages:
   - pip
   - ipython
+  - ipykernel
   - numpy
   - python=3.5.6
