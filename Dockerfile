@@ -55,4 +55,4 @@ RUN git clone https://github.com/aimacode/aima-python.git /home/usr/aima-python 
 # Terminal settings for the container
 ENV TERM=xterm-256color
 
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "-c", "/home/usr/miniconda3/bin/jupyter notebook"]
