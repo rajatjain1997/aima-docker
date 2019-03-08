@@ -1,3 +1,5 @@
-. /home/usr/miniconda3/etc/profile.d/conda.sh
+. /opt/miniconda3/etc/profile.d/conda.sh
+
+export SHELL=/bin/bash
 
 conda activate
