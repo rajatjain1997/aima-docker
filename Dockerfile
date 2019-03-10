@@ -48,11 +48,16 @@ RUN for env in /home/usr/envs/*; do /opt/miniconda3/bin/conda env create -f $env
 # Download and setup aima-python
 RUN git clone https://github.com/aimacode/aima-python.git /home/usr/aima-python && \
 #    /opt/miniconda3/bin/conda install python=3.5.6 && \
-    /opt/miniconda3/bin/pip install -r /home/usr/aima-python/requirements.txt
+    /opt/miniconda3/bin/pip install -r /home/usr/aima-python/requirements.txt && \
+    (cd aima-python && \
+    git submodule init && \
+    git submodule update) && \
+    rm -rf /home/usr/aima-python/.git
 
 # Repository setup
 COPY . /home/usr
-RUN chown -R usr /home/usr && \
+RUN ln -s /home/usr/src/docker-introduction.ipynb /home/usr/introduction.ipynb && \
+    chown -R usr /home/usr && \
     rm -rf /home/usr/envs /home/usr/bin
 
 # Terminal settings for the container
