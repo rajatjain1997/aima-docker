@@ -24,4 +24,8 @@ To start Jupyter, use the following command:
 
 If you're a collaborator, you need to first clone the repository, and then run a *different* docker run command:
 
-	AIMA=<path to aima git repo> && docker run -it --rm --network=host -v $HOME/aimacode:/home/usr/code -v $AIMA/src:/home/usr/src -v $AIMA/images:/home/usr/images rajatjain1997/aima-docker /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
+	AIMA=<path to aima git repo> && \
+	docker run -it --rm --network=host \
+	-v $HOME/aimacode:/home/usr/code -v $AIMA/src:/home/usr/src \
+	-v $AIMA/images:/home/usr/images rajatjain1997/aima-docker \
+	/opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
