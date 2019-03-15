@@ -1,20 +1,17 @@
-FROM ubuntu:16.04
+FROM nvidia/cuda:10.0-cudnn7-runtime-ubuntu16.04
 
 # System Update and pre-requisites
 RUN apt-get update && \
-    apt-get -y install \
+    apt-get install -y \
         bzip2 \
         build-essential \
         cmake \
         curl \
         git \
+        openmpi-bin \
         tar \
-        tree \
-        wget \
-        vim && \
-    apt-get install -qqy x11-apps && \
-    apt-get install -y \
-        openmpi-bin
+        wget
+        
 COPY bin/. /home/usr/bin
 RUN for setup in /home/usr/bin/*; do chmod +x $setup && $setup; done && \
     ldconfig && \
@@ -41,7 +38,7 @@ RUN wget "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
     rm -f /tmp/miniconda.sh
 
 # Setup python machine learning packages
-COPY envs/. /home/usr/envs
+COPY gpu/envs/. /home/usr/envs
 RUN for env in /home/usr/envs/*; do /opt/miniconda3/bin/conda env create -f $env; done && \
     rm -rf /home/usr/envs
 
@@ -56,13 +53,13 @@ RUN git clone https://github.com/aimacode/aima-python.git /home/usr/aima-python 
 
 # Repository setup
 COPY . /home/usr
-RUN ln -s /home/usr/src/docker-introduction.ipynb /home/usr/introduction.ipynb && \
+RUN mv /home/usr/src/docker-introduction.ipynb /home/usr/introduction.ipynb && \
     chown -R usr /home/usr && \
-    rm -rf /home/usr/envs /home/usr/bin
+    rm -rf /home/usr/cpu /home/usr/gpu /home/usr/bin
 
 # Terminal settings for the container
 USER usr:grp
 ENV TERM=xterm-256color
 ENV SHELL=/bin/bash
 
-CMD ["/bin/bash", "-c", "/opt/miniconda3/bin/jupyter notebook --NotebookApp.token='' --NotebookApp.password='' --no-browser"]
+CMD ["/opt/miniconda3/bin/jupyter", "notebook", "--NotebookApp.token=''" , "--NotebookApp.password=''", "--no-browser"]

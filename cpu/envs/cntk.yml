@@ -1,6 +1,4 @@
-name: pytorch
-channels:
- - pytorch
+name: cntk
 dependencies:
   - ipython
   - ipykernel
@@ -9,7 +7,6 @@ dependencies:
   - python=3.5.6
   - wheel
   - numpy
-  - pytorch-cpu
-  - torchvision-cpu
   - pip:
-    - scikit-learn
+    - cntk
+    - keras
