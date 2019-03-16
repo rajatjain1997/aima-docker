@@ -1,4 +1,4 @@
-name: tensorflow
+name: sklearn
 dependencies:
   - ipython
   - ipykernel
@@ -8,5 +8,4 @@ dependencies:
   - wheel
   - numpy
   - pip:
-    - tensorflow==1.13.1
-    - keras
+    - scikit-learn
