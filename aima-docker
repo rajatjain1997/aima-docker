@@ -1,0 +1,118 @@
+#!/bin/bash
+
+function git_check() {
+    git --version &> /dev/null && GIT_FOUND=1 || GIT_FOUND=0
+}
+
+function docker_check() {
+    docker version &> /dev/null && DOCKER_FOUND=1 || DOCKER_FOUND=0
+    if [[ DOCKER_FOUND -eq 0 ]]; then
+        echo "Error: You need a working docker installation to run aima-docker!"
+        exit
+    fi
+
+}
+
+function nvidia_docker_check() {
+    NVIDIA_DOCKER_VERSION=`nvidia-docker version | grep NVIDIA | awk -F'[:.]' '{print $2}' || 0`
+    if [[ NVIDIA_DOCKER_VERSION -eq 0 ]]; then
+        echo "A working nvidia-docker installation was not detected on your system." 
+        # echo "Setting up aima-docker for CPU!"
+        GPU_FOUND=0
+        return
+    elif [[ NVIDIA_DOCKER_VERSION -eq 1 ]]; then
+        echo "An outdated install of nvidia-docker was found on your system."
+        # echo "Setting up aima-docker for CPU!"
+        GPU_FOUND=0
+    fi
+    GPU_FOUND=1
+}
+
+function devel_check() {
+    AIMA_REPO=`git config --get remote.origin.url | grep aima-docker`
+    if [ ! -z "$AIMA_REPO" ]; then
+        echo "aima-docker repository found!"
+        REPO_FOUND=1
+        AIMA_REPO=$PWD
+    else
+        REPO_FOUND=0 
+        AIMA_REPO=$HOME
+    fi
+}
+
+function make_tag() {
+    if [[ REPO_FOUND -eq 1 ]]; then
+        DEVEL='devel-'
+    else
+        DEVEL=''
+    fi
+
+    if [[ GPU_FOUND -eq 1 ]]; then
+        PROC='gpu'
+    else
+        PROC='cpu'
+    fi
+
+    TAG="$DEVEL$PROC"
+}
+
+function pull_image() {
+    CURR_IMAGES=`docker images | grep horovod | awk '{print $2}'`
+
+    for img in $CURR_IMAGES; do 
+        if [[ "$img" = "$TAG" ]]; then
+            return
+        fi
+    done
+
+    echo "Setting up aima-docker on your system"
+    docker pull rajatjain1997/aima-docker:$TAG
+}
+
+function run_checks() {
+    docker_check
+    git_check
+    nvidia_docker_check
+
+    if [[ GIT_FOUND -eq 1 && "$AIMA_REPO" == "$HOME" ]]; then 
+        devel_check
+    fi
+
+    make_tag
+}
+
+AIMA_HOME=${AIMA_HOME:-$HOME/aimacode}
+AIMA_REPO=${AIMA_REPO:-$HOME}
+
+mkdir -p $AIMA_HOME || true
+
+TAG=$1
+
+if [ -z "$TAG" ]; then 
+    run_checks
+fi
+
+pull_image
+
+case $TAG in
+    cpu)
+        docker run -itd --rm --network=host \
+            -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:cpu
+        ;;
+    gpu)
+        nvidia-docker run -itd --rm --network=host \
+            -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:gpu
+        ;;
+    devel-cpu)
+        docker run -it --rm --network=host \
+            -v $AIMA_HOME:/home/usr/code -v $AIMA_REPO/src:/home/usr/src \
+            -v $AIMA_REPO/images:/home/usr/images rajatjain1997/aima-docker:devel-cpu \
+            /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
+        ;;
+    devel-gpu)
+        nvidia-docker run -it --rm --network=host \
+            -v $AIMA_HOME:/home/usr/code -v $AIMA_REPO/src:/home/usr/src \
+            -v $AIMA_REPO/images:/home/usr/images rajatjain1997/aima-docker:devel-gpu \
+            /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
+        ;;
+esac

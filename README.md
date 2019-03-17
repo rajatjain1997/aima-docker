@@ -4,28 +4,43 @@
 
 # `aima-docker`
 
-Welcome to aima-docker! You can use this in conjunction with a course on AI, or for study on your own. 
+Welcome to aima-docker! aima-docker is created to help the readers of *Artificial Intelligence: A Modern Approach* to learn and experiment with machine learning frameworks like Tensorflow, CNTK, scikit-learn etc. You can use this in conjunction with a course on AI, or for study on your own. 
 
 ## Installation Guide
 
-Before you start, make sure you have [Docker](www.docker.com) installed!
+Before you start, make sure you have [Docker](https://www.docker.com) installed! If you have an nvidia gpu, we recommend you install [Nvidia Docker](https://github.com/NVIDIA/nvidia-docker) as well.
 
-To pull the image:
+### For Linux Users
 
-	docker pull rajatjain1997/aima-docker
+The installation process is simple. You need to download the `aima-docker` script and execute it using the following commands.
 
-If you want persistent storage, create the folder `~/aimacode`.
+	wget -q0- "https://raw.githubusercontent.com/rajatjain1997/aima-docker/master/aima-docker"
+	chmod +x aima-docker
+	sudo ./aima-docker
 
-	mkdir -p ~/aimacode
+This should download and set-up the aima-docker repository for you. To check, try opening `http://localhost:8888` in your browser once the setup is complete.
 
-To start Jupyter, use the following command:
+To run aima-docker again, you just need to re-run the `aima-docker` script as follows:
 
-	docker run -itd --rm --network=host -v $HOME/aimacode:/home/usr/code rajatjain1997/aima-docker
+	sudo ./aima-docker
 
-If you're a collaborator, you need to first clone the repository, and then run a *different* docker run command:
+### For developers
 
-	AIMA=<path to aima git repo> && \
-	docker run -it --rm --network=host \
-	-v $HOME/aimacode:/home/usr/code -v $AIMA/src:/home/usr/src \
-	-v $AIMA/images:/home/usr/images rajatjain1997/aima-docker \
-	/opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
+To install the development image for aima-docker, clone the repository and run the `aima-docker` script from inside the cloned project.
+
+	git clone https://github.com/rajatjain1997/aima-docker.git
+	cd aima-docker
+	sudo ./aima-docker
+
+### Additional parameters
+
+The `aima-docker` script automatically detects if you have a valid setup available to run the docker image on GPU. To force it to use a particular tag on docker hub, use:
+
+	sudo ./aima-docker <tag-name>
+
+You can also set the following environment variables before running the script:
+
+Variable Name | Function | Default
+--------------|----------|----------
+AIMA_HOME | Sets the persistent storage location for the `code` folder in aima-container | $HOME/aimacode
+AIMA_REPO | *For Developers:* Points the script to a local aima-docker repository | $PWD
