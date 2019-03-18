@@ -7,6 +7,7 @@ RUN apt-get update && \
         build-essential \
         cmake \
         curl \
+        default-jre \
         git \
         openmpi-bin \
         tar \
