@@ -11,7 +11,8 @@ RUN apt-get update && \
         git \
         openmpi-bin \
         tar \
-        wget
+        wget \
+        zip
         
 COPY bin/. /home/usr/bin
 RUN for setup in /home/usr/bin/*; do chmod +x $setup && $setup; done && \
