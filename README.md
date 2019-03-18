@@ -2,7 +2,7 @@
   <a href="http://aima.cs.berkeley.edu/"><img src="https://raw.githubusercontent.com/aimacode/aima-python/master/images/aima_logo.png"></a><br><br>
 </div>
 
-# `aima-docker`
+# `aima-docker` ![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/rajatjain1997/aima-docker.svg)
 
 Welcome to aima-docker! aima-docker is created to help the readers of *Artificial Intelligence: A Modern Approach* to learn and experiment with machine learning frameworks like Tensorflow, CNTK, scikit-learn etc. You can use this in conjunction with a course on AI, or for study on your own. 
 
