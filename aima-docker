@@ -96,11 +96,11 @@ pull_image
 
 case $TAG in
     cpu)
-        docker run -itd --rm --network=host \
+        docker run -itd --rm -p 8888:8888 \
             -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:cpu
         ;;
     gpu)
-        nvidia-docker run -itd --rm --network=host \
+        nvidia-docker run -itd --rm -p 8888:8888 \
             -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:gpu
         ;;
     devel-cpu)

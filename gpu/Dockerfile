@@ -64,4 +64,6 @@ USER usr:grp
 ENV TERM=xterm-256color
 ENV SHELL=/bin/bash
 
-CMD ["/opt/miniconda3/bin/jupyter", "notebook", "--NotebookApp.token=''" , "--NotebookApp.password=''", "--no-browser"]
+EXPOSE 8888
+
+CMD ["/opt/miniconda3/bin/jupyter", "notebook", "--NotebookApp.token=''" , "--NotebookApp.password=''", "--no-browser", "--ip=0.0.0.0"]

@@ -10,7 +10,7 @@ Welcome to aima-docker! aima-docker is created to help the readers of *Artificia
 
 Before you start, make sure you have [Docker](https://www.docker.com) installed! If you have an nvidia gpu, we recommend you install [Nvidia Docker](https://github.com/NVIDIA/nvidia-docker) as well.
 
-### For Linux Users
+### For Linux/MacOS Users
 
 The installation process is simple. You need to download the `aima-docker` script and execute it using the following commands.
 
@@ -24,13 +24,18 @@ To run aima-docker again, you just need to re-run the `aima-docker` script as fo
 
 	sudo ./aima-docker
 
+**Note:** Since nvidia-docker does not support MacOS and windows, only Linux users will be able to lerverage their GPUs.
+
 ### For developers
 
 To install the development image for aima-docker, clone the repository and run the `aima-docker` script from inside the cloned project.
 
 	git clone https://github.com/rajatjain1997/aima-docker.git
 	cd aima-docker
+	chmod +x aima-docker
 	sudo ./aima-docker
+
+**Note:** Linux is recommended for developers since *aima-docker* script binds container network to the host's network. This docker feature is not available on MacOS or Windows.
 
 ### Additional parameters
 
