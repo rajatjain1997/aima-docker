@@ -55,7 +55,7 @@ RUN git clone https://github.com/aimacode/aima-python.git /home/usr/aima-python 
 
 # Repository setup
 COPY . /home/usr
-RUN mv /home/usr/src/docker-introduction.ipynb /home/usr/introduction.ipynb && \
+RUN ln -s /home/usr/src/docker-introduction.ipynb /home/usr/introduction.ipynb && \
     chown -R usr /home/usr && \
     rm -rf /home/usr/cpu /home/usr/gpu /home/usr/bin
 
