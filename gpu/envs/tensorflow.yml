@@ -9,4 +9,7 @@ dependencies:
   - numpy
   - pip:
     - tensorflow-gpu==1.13.1
+    - scikit-learn
     - keras
+    - pandas
+    - matplotlib

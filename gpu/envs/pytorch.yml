@@ -12,3 +12,6 @@ dependencies:
   - pytorch
   - torchvision
   - cudatoolkit=10.0
+  - scikit-learn
+  - pandas
+  - matplotlib

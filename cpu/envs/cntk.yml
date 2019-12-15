@@ -7,6 +7,9 @@ dependencies:
   - python=3.7.1
   - wheel
   - numpy
+  - pandas
+  - matplotlib
   - pip:
     - cntk
     - keras
+    - scikit-learn

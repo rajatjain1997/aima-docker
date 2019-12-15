@@ -11,3 +11,6 @@ dependencies:
   - numpy
   - pytorch-cpu
   - torchvision-cpu
+  - scikit-learn
+  - pandas
+  - matplotlib
