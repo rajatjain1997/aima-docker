@@ -57,7 +57,7 @@ function make_tag() {
 }
 
 function pull_image() {
-    CURR_IMAGES=`docker images | grep horovod | awk '{print $2}'`
+    CURR_IMAGES=`docker images | grep aima-docker | awk '{print $2}'`
 
     for img in $CURR_IMAGES; do 
         if [[ "$img" = "$TAG" ]]; then
@@ -96,21 +96,21 @@ pull_image
 
 case $TAG in
     cpu)
-        docker run -itd --rm -p 8888:8888 \
+        docker run -itd --user $(id -u):$(id -g) --rm -p 8888:8888 \
             -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:cpu
         ;;
     gpu)
-        nvidia-docker run -itd --rm -p 8888:8888 \
+        nvidia-docker run -itd --user $(id -u):$(id -g) --rm -p 8888:8888 \
             -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:gpu
         ;;
     devel-cpu)
-        docker run -it --rm --network=host \
+        docker run -it --user $(id -u):$(id -g) --rm --network=host \
             -v $AIMA_HOME:/home/usr/code -v $AIMA_REPO/src:/home/usr/src \
             -v $AIMA_REPO/images:/home/usr/images rajatjain1997/aima-docker:devel-cpu \
             /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
         ;;
     devel-gpu)
-        nvidia-docker run -it --rm --network=host \
+        nvidia-docker run -it --user $(id -u):$(id -g) --rm --network=host \
             -v $AIMA_HOME:/home/usr/code -v $AIMA_REPO/src:/home/usr/src \
             -v $AIMA_REPO/images:/home/usr/images rajatjain1997/aima-docker:devel-gpu \
             /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
