@@ -1,12 +1,13 @@
-#!/bin/bash
+#! /bin/bash
+
+set -eo pipefail
 
 function git_check() {
-    git --version &> /dev/null && GIT_FOUND=1 || GIT_FOUND=0
+    if [[ ! -z $(which git 2>/dev/null) ]]; then GIT_FOUND=1; else GIT_FOUND=0; fi
 }
 
 function docker_check() {
-    docker version &> /dev/null && DOCKER_FOUND=1 || DOCKER_FOUND=0
-    if [[ DOCKER_FOUND -eq 0 ]]; then
+    if [[ -z $(which docker 2>/dev/null) ]]; then
         echo "Error: You need a working docker installation to run aima-docker!"
         exit
     fi
@@ -14,18 +15,20 @@ function docker_check() {
 }
 
 function nvidia_docker_check() {
-    NVIDIA_DOCKER_VERSION=`nvidia-docker version | grep NVIDIA | awk -F'[:.]' '{print $2}' || 0`
-    if [[ NVIDIA_DOCKER_VERSION -eq 0 ]]; then
-        echo "A working nvidia-docker installation was not detected on your system." 
-        # echo "Setting up aima-docker for CPU!"
-        GPU_FOUND=0
-        return
-    elif [[ NVIDIA_DOCKER_VERSION -eq 1 ]]; then
-        echo "An outdated install of nvidia-docker was found on your system."
-        # echo "Setting up aima-docker for CPU!"
-        GPU_FOUND=0
-    fi
-    GPU_FOUND=1
+    echo "nvidia-docker has been deprecated. aima-docker will soon support GPUs again :-)"
+    GPU_FOUND=0
+    # NVIDIA_DOCKER_VERSION=`nvidia-docker version | grep NVIDIA | awk -F'[:.]' '{print $2}' || 0`
+    # if [[ NVIDIA_DOCKER_VERSION -eq 0 ]]; then
+    #     echo "A working nvidia-docker installation was not detected on your system." 
+    #     # echo "Setting up aima-docker for CPU!"
+    #     GPU_FOUND=0
+    #     return
+    # elif [[ NVIDIA_DOCKER_VERSION -eq 1 ]]; then
+    #     echo "An outdated install of nvidia-docker was found on your system."
+    #     # echo "Setting up aima-docker for CPU!"
+    #     GPU_FOUND=0
+    # fi
+    # GPU_FOUND=1
 }
 
 function devel_check() {
@@ -96,23 +99,25 @@ pull_image
 
 case $TAG in
     cpu)
-        docker run -itd --user $(id -u):$(id -g) --rm -p 8888:8888 \
+        docker run -itd --rm -p 8888:8888 \
             -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:cpu
         ;;
     gpu)
-        nvidia-docker run -itd --user $(id -u):$(id -g) --rm -p 8888:8888 \
+        nvidia-docker run -itd --rm -p 8888:8888 \
             -v $AIMA_HOME:/home/usr/code rajatjain1997/aima-docker:gpu
         ;;
     devel-cpu)
-        docker run -it --user $(id -u):$(id -g) --rm --network=host \
+        docker run -it --rm --network=host \
             -v $AIMA_HOME:/home/usr/code -v $AIMA_REPO/src:/home/usr/src \
             -v $AIMA_REPO/images:/home/usr/images rajatjain1997/aima-docker:devel-cpu \
-            /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
+            /bin/bash -c "source ~/.bashprofile;
+            /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser"
         ;;
     devel-gpu)
-        nvidia-docker run -it --user $(id -u):$(id -g) --rm --network=host \
+        nvidia-docker run -it --rm --network=host \
             -v $AIMA_HOME:/home/usr/code -v $AIMA_REPO/src:/home/usr/src \
             -v $AIMA_REPO/images:/home/usr/images rajatjain1997/aima-docker:devel-gpu \
-            /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser
+            /bin/bash -c "source ~/.bashprofile;
+            /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser"
         ;;
 esac
