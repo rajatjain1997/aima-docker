@@ -11,3 +11,4 @@ dependencies:
   - matplotlib
   - pip:
     - nltk
+    - scikit-learn
