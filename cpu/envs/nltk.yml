@@ -9,6 +9,8 @@ dependencies:
   - numpy
   - pandas
   - matplotlib
+  - pillow
+  - opencv
   - pip:
     - nltk
     - scikit-learn

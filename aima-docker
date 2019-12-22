@@ -109,7 +109,8 @@ case $TAG in
     devel-cpu)
         docker run -it --rm --network=host \
             -v $AIMA_HOME:/home/usr/code -v $AIMA_REPO/src:/home/usr/src \
-            -v $AIMA_REPO/images:/home/usr/images rajatjain1997/aima-docker:devel-cpu \
+            -v $AIMA_REPO/images:/home/usr/images -v $AIMA_REPO/data:/home/usr/data \
+            rajatjain1997/aima-docker:devel-cpu \
             /bin/bash -c "source ~/.bashprofile;
             /opt/miniconda3/bin/jupyter notebook --allow-root --no-browser"
         ;;
