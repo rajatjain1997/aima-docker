@@ -9,7 +9,8 @@ dependencies:
   - numpy
   - pandas
   - matplotlib
-  - pip:
-    - tensorflow==1.13.1
-    - scikit-learn
-    - keras
+  - pillow
+  - opencv
+  - tensorflow==1.13.1
+  - keras
+  - scikit-learn
