@@ -30,7 +30,10 @@ To run aima-docker again, you just need to re-run the `aima-docker` script as fo
 After you install Docker for Windows, make sure you allow containers access to the disk drive that you want aima-docker to store code files on. To run aima-docker, make sure that docker service is running and run the following command in Windows Powershell:
 
 	docker run -itd --rm -p 8888:8888 -v <PATH_TO_CODE_FOLDER>:/home/usr/code rajatjain1997/aima-docker:cpu
-
+	
+Can be executed without -v paremeter
+	
+	docker run -itd --rm -p 8888:8888 rajatjain1997/aima-docker:cpu
 
 
 **Note:** Since nvidia-docker does not support MacOS and Windows, only Linux users will be able to lerverage their GPUs.
